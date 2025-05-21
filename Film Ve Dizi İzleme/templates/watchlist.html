@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}İzleme Listem - Film ve Dizi İzleme Servisi{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 class="display-4">İzleme Listem</h1>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
+    {% for item in watchlist %}
+    <div class="col d-flex align-items-stretch">
+        <div class="card content-card w-100 h-100" style="background: #181818; border-radius: 18px; overflow: hidden;">
+            {% if item.content.image_url %}
+            <img src="{{ url_for('static', filename=item.content.image_url.split('static/')[1]) }}" class="card-img-top" alt="{{ item.content.title }} posteri" style="height: 350px; object-fit: cover; border-radius: 0;">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title mb-2" style="color: #fff;">{{ item.content.title }}</h5>
+                <div class="movie-details mb-2">
+                    <div class="d-flex align-items-center mb-1">
+                        <span class="badge bg-primary me-2">
+                            {% if item.content.type|lower == 'movie' %}
+                                Film
+                            {% else %}
+                                Dizi
+                            {% endif %}
+                        </span>
+                        {% if item.content.duration %}
+                        <span class="text-white-50 me-2">
+                            <i class="far fa-clock me-1"></i>{{ item.content.duration }} dk
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% if item.content.genre %}
+                    <div class="genre-tags">
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-tag me-1"></i>{{ item.content.genre }}
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i>{{ item.added_date.strftime('%d/%m/%Y') }}
+                        </small>
+                    </div>
+                </div>
+                <p class="card-text" style="color: #aaa;">{{ item.content.description }}</p>
+                <div class="mt-auto">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="watched{{ item.id }}" 
+                               {% if item.watched %}checked{% endif %} disabled>
+                        <label class="form-check-label" for="watched{{ item.id }}" style="color: #fff;">
+                            İzlendi
+                        </label>
+                    </div>
+                    <a href="#" class="btn btn-outline-danger w-100" style="border-color: #e50914; color: #e50914;">
+                        <i class="fas fa-trash me-1"></i>Listeden Çıkar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle me-2"></i>
+            İzleme listenizde henüz içerik bulunmuyor. Ana sayfadan içerik ekleyebilirsiniz.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
